@@ -1,18 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import navbarRoutes from "../config/navbar-paths";
 
 const Navbar: React.FC = () => {
   return (
     <nav>
       <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/contact">Contact</Link>
-        </li>
+        {navbarRoutes.map((route) => (
+          <li>
+            <Link key={route.text} to={route.path}>
+              {route.text}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );
