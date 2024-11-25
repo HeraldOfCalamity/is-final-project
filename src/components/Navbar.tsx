@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import navbarRoutes from "../config/navbar-paths";
 import { MouseEvent, useState } from "react";
 import {
