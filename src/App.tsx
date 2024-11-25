@@ -8,8 +8,17 @@ import ClientList from "./pages/clients/ClientList";
 import NotFoundPage from "./pages/NotFoundPage";
 import ClientLayout from "./pages/clients/ClientLayout";
 import NewClient from "./pages/clients/NewClient";
+import { Client } from "./classes/Client";
+import { CLIENTS } from "./public/sample-client-data";
+import { useEffect, useState } from "react";
 
 const App: React.FC = () => {
+  const [clients, setClients] = useState<Client[]>([]);
+
+  useEffect(() => {
+    setClients(CLIENTS);
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -19,7 +28,7 @@ const App: React.FC = () => {
           <Route path="about" element={<About />} />
           <Route path="map" element={<MapComponent />} />
           <Route path="clients" element={<ClientLayout />}>
-            <Route index element={<ClientList />} />
+            <Route index element={<ClientList clients={clients} />} />
             <Route path="new" element={<NewClient />} />
             {/* <Route path='edit' element={<EditClient />} /> */}
           </Route>

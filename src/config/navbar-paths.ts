@@ -5,8 +5,9 @@ interface Route {
 
 const navbarRoutes: Route[] = [
   { path: "/", text: "Home" },
-  { path: "/about", text: "About" },
   { path: "/map", text: "Map" },
+  { path: "/clients", text: "Clients" },
+  { path: "/about", text: "About" },
 ];
 
 export default navbarRoutes;

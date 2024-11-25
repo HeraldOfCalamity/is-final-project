@@ -27,17 +27,6 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    // <nav>
-    //   <ul>
-    //     {navbarRoutes.map((route) => (
-    //       <li>
-    //         <Link key={route.text} to={route.path}>
-    //           {route.text}
-    //         </Link>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </nav>
     <AppBar position="static" sx={{ mb: 2.5 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -52,7 +41,7 @@ const Navbar: React.FC = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -97,8 +86,25 @@ const Navbar: React.FC = () => {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {navbarRoutes.map((route) => (
-                <MenuItem key={route.text} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
+                <MenuItem
+                  key={route.text}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    p: 0,
+                  }}
+                >
+                  <Typography
+                    component="a"
+                    href={route.path}
+                    sx={{
+                      flexGrow: 1,
+                      padding: 1,
+                      paddingInline: 2,
+                      textAlign: "center",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
                     {route.text}
                   </Typography>
                 </MenuItem>
@@ -110,7 +116,7 @@ const Navbar: React.FC = () => {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -128,6 +134,7 @@ const Navbar: React.FC = () => {
             {navbarRoutes.map((route) => (
               <Button
                 key={route.text}
+                href={route.path}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "inherit", display: "block" }}
               >
