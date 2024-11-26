@@ -10,7 +10,6 @@ const LocationBreadCrumb: React.FC = () => {
 
   const getPathArray = (): string[] => {
     const pathArray = window.location.pathname.split("/").slice(1);
-    console.log(pathArray);
     return pathArray;
   };
 
@@ -21,7 +20,9 @@ const LocationBreadCrumb: React.FC = () => {
 
   const getPathForIndex = (index: number): string => {
     const basePath = getBasePath();
-    const composedPath = basePath + location.slice(1, index).join("/");
+    const composedPath =
+      basePath + "/" + location.slice(1, index + 1).join("/");
+    console.log(composedPath);
     return composedPath;
   };
 
