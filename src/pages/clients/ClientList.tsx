@@ -19,9 +19,6 @@ interface ClientListProps {
 const ClientList: React.FC<ClientListProps> = ({ clients }) => {
   return (
     <>
-      <Button variant="contained" href="/clients/new">
-        New Client
-      </Button>
       <TableContainer>
         <Table>
           <TableHead>
@@ -58,6 +55,13 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
                 </TableCell>
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell colSpan={5}>
+                <Button variant="contained" href="/clients/new" fullWidth>
+                  New Client
+                </Button>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
