@@ -41,11 +41,11 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
           <TableBody>
             {clients.map((client) => (
               <TableRow key={client.id}>
-                <TableCell>{client.id}</TableCell>
-                <TableCell>{client.username}</TableCell>
-                <TableCell>{client.name}</TableCell>
-                <TableCell>{client.lastname}</TableCell>
-                <TableCell>
+                <TableCell align="center">{client.id}</TableCell>
+                <TableCell align="center">{client.username}</TableCell>
+                <TableCell align="center">{client.name}</TableCell>
+                <TableCell align="center">{client.lastname}</TableCell>
+                <TableCell align="center">
                   <Box
                     sx={{
                       display: "flex",
@@ -62,6 +62,7 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
         </Table>
       </TableContainer>
       <Typography>add pagination</Typography>
+      <Typography>add plus symbol to create client</Typography>
     </>
   );
 };
