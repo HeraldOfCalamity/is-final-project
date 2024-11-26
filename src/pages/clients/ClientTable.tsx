@@ -1,6 +1,11 @@
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Pagination,
   Table,
@@ -9,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import { Client, CLIENT_FIELDS } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
@@ -16,10 +22,19 @@ import { useState } from "react";
 
 interface ClientTableProps {
   clients: Client[];
+  onDelete: (clientId: string) => void;
+  onEdit: (updatedClient: Client) => void;
 }
 
-const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
+const ClientTable: React.FC<ClientTableProps> = ({
+  clients,
+  onDelete,
+  onEdit,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const maxClientsPerPage = 5;
 
   const totalPages = Math.ceil(clients.length / maxClientsPerPage);
@@ -40,6 +55,30 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
     setCurrentPage(page);
     console.log("value", page);
     console.log("page", currentPage);
+  };
+
+  const handleDeleteClick = (client: Client) => {
+    setSelectedClient(client);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeletion = () => {
+    if (selectedClient) {
+      onDelete(selectedClient.id);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleEditClick = (client: Client) => {
+    setSelectedClient(client);
+    setShowEditForm(true);
+  };
+
+  const handleEditSubmit = () => {
+    if (selectedClient) {
+      onEdit(selectedClient);
+      setShowEditForm(false);
+    }
   };
 
   return (
@@ -74,10 +113,10 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <IconButton>
+                    <IconButton onClick={() => handleDeleteClick(client)}>
                       <Delete color="error" />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => handleEditClick(client)}>
                       <Edit color="success" />
                     </IconButton>
                   </Box>
@@ -94,6 +133,7 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <Pagination
         count={totalPages}
         page={currentPage}
@@ -101,6 +141,55 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
         shape="rounded"
         sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
       />
+
+      {/* Edit Form */}
+      {showEditForm && selectedClient && (
+        <Box
+          sx={{
+            position: "fixed",
+            bottom: 50,
+            right: 50,
+            background: "white",
+            padding: 2,
+          }}
+        >
+          <TextField
+            label="Name"
+            value={selectedClient.name}
+            onChange={(e) =>
+              setSelectedClient({ ...selectedClient, name: e.target.value })
+            }
+            fullWidth
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEditSubmit}
+          >
+            Save
+          </Button>
+        </Box>
+      )}
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Client Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete client "{selectedClient?.name}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeletion} color="error">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
