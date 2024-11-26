@@ -1,22 +1,47 @@
 import {
   Box,
   Button,
+  IconButton,
+  Pagination,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import { Client, CLIENT_FIELDS } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
+import { useState } from "react";
 
-interface ClientListProps {
+interface ClientTableProps {
   clients: Client[];
 }
 
-const ClientList: React.FC<ClientListProps> = ({ clients }) => {
+const ClientTable: React.FC<ClientTableProps> = ({ clients }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const maxClientsPerPage = 5;
+
+  const totalPages = Math.ceil(clients.length / maxClientsPerPage);
+
+  const getPaginatedClients = (): Client[] => {
+    const startIndex = (currentPage - 1) * maxClientsPerPage;
+    const endIndex = startIndex + maxClientsPerPage;
+
+    return clients.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    console.log("value", page);
+    console.log("page", currentPage);
+    setCurrentPage(page);
+    console.log("value", page);
+    console.log("page", currentPage);
+  };
+
   return (
     <>
       <TableContainer>
@@ -36,7 +61,7 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {clients.map((client) => (
+            {getPaginatedClients().map((client) => (
               <TableRow key={client.id}>
                 <TableCell align="center">{client.id}</TableCell>
                 <TableCell align="center">{client.username}</TableCell>
@@ -49,8 +74,12 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
                       justifyContent: "center",
                     }}
                   >
-                    <Delete color="error" sx={{ mr: 2 }} />
-                    <Edit color="success" />
+                    <IconButton>
+                      <Delete color="error" />
+                    </IconButton>
+                    <IconButton>
+                      <Edit color="success" />
+                    </IconButton>
                   </Box>
                 </TableCell>
               </TableRow>
@@ -65,10 +94,15 @@ const ClientList: React.FC<ClientListProps> = ({ clients }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography>add pagination</Typography>
-      <Typography>add plus symbol to create client</Typography>
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
+        shape="rounded"
+        sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+      />
     </>
   );
 };
 
-export default ClientList;
+export default ClientTable;
