@@ -5,4 +5,4 @@ export interface Client {
   lastname: string;
 }
 
-export const CLIENT_FIELDS = ["Id", "Username", "Name", "Lastname"];
+export const CLIENT_FIELDS = ["id", "username", "name", "lastname"];

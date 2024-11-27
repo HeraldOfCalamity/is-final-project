@@ -7,7 +7,7 @@ import { Container } from "@mui/material";
 import ClientTable from "./pages/clients/ClientTable";
 import NotFoundPage from "./pages/NotFoundPage";
 import ClientLayout from "./pages/clients/ClientLayout";
-import NewClient from "./pages/clients/NewClient";
+import ClientForm from "./pages/clients/ClientForm";
 import { Client } from "./classes/Client";
 import { useEffect, useState } from "react";
 import {
@@ -60,7 +60,10 @@ const App: React.FC = () => {
                 />
               }
             />
-            <Route path="new" element={<NewClient />} />
+            <Route
+              path="new"
+              element={<ClientForm formTitle="Client Registration" />}
+            />
             {/* <Route path='edit' element={<EditClient />} /> */}
           </Route>
           <Route path="*" element={<NotFoundPage />} />

@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Client, CLIENT_FIELDS } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface ClientTableProps {
   clients: Client[];
@@ -38,6 +38,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
   const maxClientsPerPage = 5;
 
   const totalPages = Math.ceil(clients.length / maxClientsPerPage);
+  const dialogContainerRef = useRef<HTMLDivElement>(null);
 
   const getPaginatedClients = (): Client[] => {
     const startIndex = (currentPage - 1) * maxClientsPerPage;
@@ -174,6 +175,11 @@ const ClientTable: React.FC<ClientTableProps> = ({
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
+        TransitionProps={{
+          onExited: () => {
+            dialogContainerRef.current?.focus();
+          },
+        }}
       >
         <DialogTitle>Confirm Client Deletion</DialogTitle>
         <DialogContent>
@@ -190,6 +196,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <div ref={dialogContainerRef} tabIndex={-1} style={{ outline: "none" }} />
     </>
   );
 };
