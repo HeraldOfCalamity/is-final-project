@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import MapComponent from "./components/MapComponent";
 import { Container } from "@mui/material";
 import ClientTable from "./pages/clients/ClientTable";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -16,6 +15,8 @@ import {
   getClients,
   updateClient,
 } from "./services/client-service";
+import TerrainLayout from "./pages/terrains/TerrainLayout";
+import TerrainDisplay from "./pages/terrains/TerrrainDisplay";
 
 const App: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -84,7 +85,6 @@ const App: React.FC = () => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="map" element={<MapComponent />} />
           <Route path="clients" element={<ClientLayout />}>
             <Route
               index
@@ -110,6 +110,9 @@ const App: React.FC = () => {
               }
             />
             {/* <Route path='edit' element={<EditClient />} /> */}
+          </Route>
+          <Route path="terrains" element={<TerrainLayout />}>
+            <Route index element={<TerrainDisplay />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
