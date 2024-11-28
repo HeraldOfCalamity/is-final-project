@@ -17,9 +17,12 @@ import {
 } from "./services/client-service";
 import TerrainLayout from "./pages/terrains/TerrainLayout";
 import TerrainDisplay from "./pages/terrains/TerrrainDisplay";
+import { getTerrains } from "./services/terrain-service";
+import { Terrain } from "./classes/Terrain";
 
 const App: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [terrains, setTerrains] = useState<Terrain[]>([]);
 
   const emptyClient: Client = {
     id: "",
@@ -44,11 +47,17 @@ const App: React.FC = () => {
 
   useEffect(() => {
     fetchClients();
+    fetchTerrains();
   }, []);
 
   const fetchClients = async () => {
     const fetchedClients = await getClients();
     setClients(fetchedClients);
+  };
+
+  const fetchTerrains = async () => {
+    const fetchedTerrains = await getTerrains();
+    setTerrains(fetchedTerrains);
   };
 
   const handleClientDeletion = async (clientId: string) => {
@@ -112,7 +121,7 @@ const App: React.FC = () => {
             {/* <Route path='edit' element={<EditClient />} /> */}
           </Route>
           <Route path="terrains" element={<TerrainLayout />}>
-            <Route index element={<TerrainDisplay />} />
+            <Route index element={<TerrainDisplay terrains={terrains} />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
