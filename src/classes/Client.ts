@@ -5,4 +5,7 @@ export interface Client {
   lastname: string;
 }
 
-export const CLIENT_FIELDS = ["id", "username", "name", "lastname"];
+export interface ClientFormField {
+  fieldName: string;
+  disabled: boolean;
+}

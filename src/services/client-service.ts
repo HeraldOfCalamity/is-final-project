@@ -24,3 +24,9 @@ export const updateClient = (updatedClient: Client): Promise<Client> => {
   );
   return Promise.resolve(updatedClient);
 };
+
+export const createClient = (newClient: Client): Promise<Client> => {
+  CLIENTS.push(newClient);
+  console.log(CLIENTS);
+  return Promise.resolve(newClient);
+};

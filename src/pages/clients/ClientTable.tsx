@@ -14,14 +14,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
-import { Client, CLIENT_FIELDS } from "../../classes/Client";
+import { Client, ClientFormField } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
 import { useRef, useState } from "react";
+import ClientForm from "./ClientForm";
 
 interface ClientTableProps {
   clients: Client[];
+  clientFields: ClientFormField[];
   onDelete: (clientId: string) => void;
   onEdit: (updatedClient: Client) => void;
 }
@@ -29,6 +30,7 @@ interface ClientTableProps {
 const ClientTable: React.FC<ClientTableProps> = ({
   clients,
   onDelete,
+  clientFields,
   onEdit,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,11 +53,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
-    console.log("value", page);
-    console.log("page", currentPage);
     setCurrentPage(page);
-    console.log("value", page);
-    console.log("page", currentPage);
   };
 
   const handleDeleteClick = (client: Client) => {
@@ -82,19 +80,23 @@ const ClientTable: React.FC<ClientTableProps> = ({
     }
   };
 
+  const handleEditFormClose = () => {
+    setShowEditForm(false);
+  };
+
   return (
     <>
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              {CLIENT_FIELDS.map((field) => (
+              {clientFields.map((field) => (
                 <TableCell
-                  key={"h_" + field}
+                  key={"h_" + field.fieldName}
                   align="center"
                   // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  {field}
+                  {field.fieldName[0].toUpperCase() + field.fieldName.slice(1)}
                 </TableCell>
               ))}
               <TableCell align="center">Tools</TableCell>
@@ -102,7 +104,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
           </TableHead>
           <TableBody>
             {getPaginatedClients().map((client) => (
-              <TableRow key={client.id}>
+              <TableRow key={"tr_" + client.id}>
                 <TableCell align="center">{client.id}</TableCell>
                 <TableCell align="center">{client.username}</TableCell>
                 <TableCell align="center">{client.name}</TableCell>
@@ -145,31 +147,20 @@ const ClientTable: React.FC<ClientTableProps> = ({
 
       {/* Edit Form */}
       {showEditForm && selectedClient && (
-        <Box
+        <ClientForm
+          clientFields={clientFields}
+          formTitle="Edit Client"
+          handleCancel={handleEditFormClose}
+          handleFormSubmit={handleEditSubmit}
+          initialClientValue={selectedClient}
           sx={{
             position: "fixed",
-            bottom: 50,
-            right: 50,
+            bottom: 100,
+            right: 100,
             background: "white",
             padding: 2,
           }}
-        >
-          <TextField
-            label="Name"
-            value={selectedClient.name}
-            onChange={(e) =>
-              setSelectedClient({ ...selectedClient, name: e.target.value })
-            }
-            fullWidth
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEditSubmit}
-          >
-            Save
-          </Button>
-        </Box>
+        />
       )}
 
       <Dialog

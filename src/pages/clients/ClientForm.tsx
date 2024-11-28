@@ -1,28 +1,39 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  SxProps,
+  TextField,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { Client, CLIENT_FIELDS } from "../../classes/Client";
+import { Client, ClientFormField } from "../../classes/Client";
 
 interface ClientFormProps {
   formTitle: string;
+  handleFormSubmit: (client: Client) => void;
+  handleCancel: () => void;
+  clientFields: ClientFormField[];
+  sx?: SxProps<Theme>;
+  initialClientValue: Client;
 }
 
-const ClientForm: React.FC<ClientFormProps> = ({ formTitle }) => {
-  const [client, setClient] = useState<Client>({
-    id: "",
-    name: "",
-    lastname: "",
-    username: "",
-  });
+const ClientForm: React.FC<ClientFormProps> = ({
+  formTitle,
+  handleFormSubmit,
+  handleCancel,
+  sx,
+  initialClientValue,
+  clientFields,
+}) => {
+  const [client, setClient] = useState<Client>(initialClientValue);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClient({
       ...client,
       [e.target.name]: e.target.value,
     });
-    console.log(client);
-  };
-
-  const handleFormSubmit = () => {
     console.log(client);
   };
 
@@ -40,6 +51,7 @@ const ClientForm: React.FC<ClientFormProps> = ({ formTitle }) => {
     <Paper
       sx={{
         p: 5,
+        ...sx,
       }}
     >
       <Typography variant="h6">{formTitle}</Typography>
@@ -52,26 +64,37 @@ const ClientForm: React.FC<ClientFormProps> = ({ formTitle }) => {
           flexDirection: "column",
         }}
       >
-        {CLIENT_FIELDS.map((field) => (
+        {clientFields.map((field) => (
           <TextField
+            key={"txt_" + field.fieldName}
             required
             variant="standard"
-            label={field[0].toUpperCase() + field.slice(1)}
-            name={field}
-            value={getClientValueFromField(field)}
+            disabled={field.disabled}
+            label={field.fieldName[0].toUpperCase() + field.fieldName.slice(1)}
+            name={field.fieldName}
+            value={getClientValueFromField(field.fieldName)}
             onChange={handleChange}
           />
         ))}
       </Box>
-      <Button
-        onClick={() => handleFormSubmit()}
-        variant="contained"
+      <Box
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
           mt: 4,
         }}
       >
-        Save
-      </Button>
+        <Button onClick={() => handleFormSubmit(client)} variant="contained">
+          Save
+        </Button>
+        <Button
+          onClick={() => handleCancel()}
+          variant="contained"
+          color="error"
+        >
+          Cancel
+        </Button>
+      </Box>
     </Paper>
   );
 };
