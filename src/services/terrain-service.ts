@@ -4,7 +4,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "1",
     name: "Terreno 1",
-    coordinates: [-17.413388, -66.046402],
     shape: [
       [-17.413381, -66.046535],
       [-17.413294, -66.046478],
@@ -16,7 +15,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "2",
     name: "Terreno 2",
-    coordinates: [-17.413509, -66.046205],
     shape: [
       [-17.413501, -66.046342],
       [-17.413395, -66.046266],
@@ -28,7 +26,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "3",
     name: "Terreno 3",
-    coordinates: [-17.413483, -66.046464],
     shape: [
       [-17.413453, -66.04658],
       [-17.413381, -66.046535],
@@ -39,7 +36,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "4",
     name: "Terreno 4",
-    coordinates: [-17.413605, -66.046254],
     shape: [
       [-17.413575, -66.046387],
       [-17.413501, -66.046342],
@@ -50,7 +46,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "5",
     name: "Terreno 5",
-    coordinates: [-17.413556, -66.046504],
     shape: [
       [-17.413529, -66.046632],
       [-17.413453, -66.04658],
@@ -61,7 +56,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "6",
     name: "Terreno 6",
-    coordinates: [-17.413676, -66.046312],
     shape: [
       [-17.413652, -66.046435],
       [-17.413575, -66.046387],
@@ -72,7 +66,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "7",
     name: "Terreno 7",
-    coordinates: [-17.413636, -66.046565],
     shape: [
       [-17.413607, -66.046683],
       [-17.413529, -66.046632],
@@ -83,7 +76,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "8",
     name: "Terreno 8",
-    coordinates: [-17.41375, -66.046359],
     shape: [
       [-17.413726, -66.046489],
       [-17.413652, -66.046435],
@@ -94,7 +86,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "9",
     name: "Terreno 9",
-    coordinates: [-17.41375, -66.046359],
     shape: [
       [-17.413763, -66.046743],
       [-17.413718, -66.046755],
@@ -106,7 +97,6 @@ let TERRAINS: Terrain[] = [
   {
     id: "10",
     name: "Terreno 10",
-    coordinates: [-17.413833, -66.046426],
     shape: [
       [-17.41384, -66.046568],
       [-17.413726, -66.046489],

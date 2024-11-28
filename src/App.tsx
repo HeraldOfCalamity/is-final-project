@@ -17,8 +17,9 @@ import {
 } from "./services/client-service";
 import TerrainLayout from "./pages/terrains/TerrainLayout";
 import TerrainDisplay from "./pages/terrains/TerrrainDisplay";
-import { getTerrains } from "./services/terrain-service";
+import { createTerrain, getTerrains } from "./services/terrain-service";
 import { Terrain } from "./classes/Terrain";
+import TerrainCreator from "./pages/terrains/TerrainCreator";
 
 const App: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
@@ -78,6 +79,14 @@ const App: React.FC = () => {
     redirectToClientTable();
   };
 
+  const handleNewTerrain = (terrain: Terrain) => {
+    createTerrain(terrain);
+  };
+
+  const handleCancelTerrain = () => {
+    window.location.pathname = "/terrains";
+  };
+
   const redirectToClientTable = (): void => {
     window.location.pathname = "/clients";
     fetchClients();
@@ -122,6 +131,15 @@ const App: React.FC = () => {
           </Route>
           <Route path="terrains" element={<TerrainLayout />}>
             <Route index element={<TerrainDisplay terrains={terrains} />} />
+            <Route
+              path="new"
+              element={
+                <TerrainCreator
+                  onSave={handleNewTerrain}
+                  onCancel={handleCancelTerrain}
+                />
+              }
+            />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
