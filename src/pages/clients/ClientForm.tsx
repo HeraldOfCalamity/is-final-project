@@ -7,7 +7,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { Client, ClientFormField } from "../../classes/Client";
 
 interface ClientFormProps {
@@ -17,6 +17,7 @@ interface ClientFormProps {
   clientFields: ClientFormField[];
   sx?: SxProps<Theme>;
   initialClientValue: Client;
+  setClient: (client: Client) => void;
 }
 
 const ClientForm: React.FC<ClientFormProps> = ({
@@ -26,19 +27,22 @@ const ClientForm: React.FC<ClientFormProps> = ({
   sx,
   initialClientValue,
   clientFields,
+  setClient,
 }) => {
-  const [client, setClient] = useState<Client>(initialClientValue);
+  // const [client, setClient] = useState<Client>(initialClientValue);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClient({
-      ...client,
+      ...initialClientValue,
       [e.target.name]: e.target.value,
     });
-    console.log(client);
+    console.log(initialClientValue);
   };
 
   const getClientValueFromField = (field: string) => {
-    const entry = Object.entries(client).find((pair) => pair[0] === field);
+    const entry = Object.entries(initialClientValue).find(
+      (pair) => pair[0] === field
+    );
     let value = "";
     if (entry) {
       value = entry[1];
@@ -84,7 +88,10 @@ const ClientForm: React.FC<ClientFormProps> = ({
           mt: 4,
         }}
       >
-        <Button onClick={() => handleFormSubmit(client)} variant="contained">
+        <Button
+          onClick={() => handleFormSubmit(initialClientValue)}
+          variant="contained"
+        >
           Save
         </Button>
         <Button

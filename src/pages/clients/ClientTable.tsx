@@ -17,27 +17,41 @@ import {
 } from "@mui/material";
 import { Client, ClientFormField } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClientForm from "./ClientForm";
+import {
+  deleteClient,
+  getClients,
+  updateClient,
+} from "../../services/client-service";
 
 interface ClientTableProps {
-  clients: Client[];
   clientFields: ClientFormField[];
-  onDelete: (clientId: string) => void;
-  onEdit: (updatedClient: Client) => void;
 }
 
-const ClientTable: React.FC<ClientTableProps> = ({
-  clients,
-  onDelete,
-  clientFields,
-  onEdit,
-}) => {
+const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
+  const [clients, setClients] = useState<Client[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const maxClientsPerPage = 5;
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    const fetchedClients = await getClients();
+    setClients(fetchedClients);
+  };
+
+  const handleClientDeletion = async (clientId: string) => {
+    const confirmed = await deleteClient(clientId);
+    if (confirmed) {
+      fetchClients();
+    }
+  };
 
   const totalPages = Math.ceil(clients.length / maxClientsPerPage);
   const dialogContainerRef = useRef<HTMLDivElement>(null);
@@ -63,9 +77,16 @@ const ClientTable: React.FC<ClientTableProps> = ({
 
   const confirmDeletion = () => {
     if (selectedClient) {
-      onDelete(selectedClient.id);
+      // onDelete(selectedClient.id);
+      handleClientDeletion(selectedClient.id); /////////////////
       setDeleteDialogOpen(false);
     }
+  };
+
+  const handleClientEdition = async (updatedClient: Client) => {
+    const editedClient = await updateClient(updatedClient);
+    console.log("updatedClient:", editedClient);
+    fetchClients();
   };
 
   const handleEditClick = (client: Client) => {
@@ -75,7 +96,8 @@ const ClientTable: React.FC<ClientTableProps> = ({
 
   const handleEditSubmit = () => {
     if (selectedClient) {
-      onEdit(selectedClient);
+      // onEdit(selectedClient);
+      handleClientEdition(selectedClient);
       setShowEditForm(false);
     }
   };
@@ -153,6 +175,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
           handleCancel={handleEditFormClose}
           handleFormSubmit={handleEditSubmit}
           initialClientValue={selectedClient}
+          setClient={setSelectedClient}
           sx={{
             position: "fixed",
             bottom: 100,
