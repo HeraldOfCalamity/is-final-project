@@ -17,27 +17,52 @@ import {
 } from "@mui/material";
 import { Client, ClientFormField } from "../../classes/Client";
 import { Delete, Edit } from "@mui/icons-material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClientForm from "./ClientForm";
+import {
+  deleteClient,
+  getClients,
+  updateClient,
+} from "../../services/client-service";
 
-interface ClientTableProps {
-  clients: Client[];
-  clientFields: ClientFormField[];
-  onDelete: (clientId: string) => void;
-  onEdit: (updatedClient: Client) => void;
-}
+const editClientFormFields: ClientFormField[] = [
+  { fieldName: "id", disabled: true },
+  { fieldName: "username", disabled: false },
+  { fieldName: "name", disabled: false },
+  { fieldName: "lastname", disabled: false },
+  { fieldName: "lat", disabled: false },
+  { fieldName: "lng", disabled: false },
+];
 
-const ClientTable: React.FC<ClientTableProps> = ({
-  clients,
-  onDelete,
-  clientFields,
-  onEdit,
-}) => {
+const ClientTable: React.FC = () => {
+  const [clients, setClients] = useState<Client[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client>({
+    id: "",
+    coordenates: [0, 0],
+    lastname: "",
+    name: "",
+    username: "",
+  });
   const [showEditForm, setShowEditForm] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const maxClientsPerPage = 5;
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    const fetchedClients = await getClients();
+    setClients(fetchedClients);
+  };
+
+  const handleClientDeletion = async (clientId: string) => {
+    const confirmed = await deleteClient(clientId);
+    if (confirmed) {
+      fetchClients();
+    }
+  };
 
   const totalPages = Math.ceil(clients.length / maxClientsPerPage);
   const dialogContainerRef = useRef<HTMLDivElement>(null);
@@ -63,9 +88,16 @@ const ClientTable: React.FC<ClientTableProps> = ({
 
   const confirmDeletion = () => {
     if (selectedClient) {
-      onDelete(selectedClient.id);
+      // onDelete(selectedClient.id);
+      handleClientDeletion(selectedClient.id); /////////////////
       setDeleteDialogOpen(false);
     }
+  };
+
+  const handleClientEdition = async (updatedClient: Client) => {
+    const editedClient = await updateClient(updatedClient);
+    console.log("updatedClient:", editedClient);
+    fetchClients();
   };
 
   const handleEditClick = (client: Client) => {
@@ -75,7 +107,8 @@ const ClientTable: React.FC<ClientTableProps> = ({
 
   const handleEditSubmit = () => {
     if (selectedClient) {
-      onEdit(selectedClient);
+      // onEdit(selectedClient);
+      handleClientEdition(selectedClient);
       setShowEditForm(false);
     }
   };
@@ -90,7 +123,7 @@ const ClientTable: React.FC<ClientTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              {clientFields.map((field) => (
+              {editClientFormFields.map((field) => (
                 <TableCell
                   key={"h_" + field.fieldName}
                   align="center"
@@ -109,6 +142,8 @@ const ClientTable: React.FC<ClientTableProps> = ({
                 <TableCell align="center">{client.username}</TableCell>
                 <TableCell align="center">{client.name}</TableCell>
                 <TableCell align="center">{client.lastname}</TableCell>
+                <TableCell align="center">{client.coordenates[0]}</TableCell>
+                <TableCell align="center">{client.coordenates[1]}</TableCell>
                 <TableCell align="center">
                   <Box
                     sx={{
@@ -126,16 +161,20 @@ const ClientTable: React.FC<ClientTableProps> = ({
                 </TableCell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell colSpan={5}>
-                <Button variant="contained" href="/clients/new" fullWidth>
-                  New Client
-                </Button>
-              </TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Button
+        sx={{
+          mt: 2,
+        }}
+        variant="contained"
+        href="/clients/new"
+        fullWidth
+      >
+        New Client
+      </Button>
 
       <Pagination
         count={totalPages}
@@ -148,11 +187,12 @@ const ClientTable: React.FC<ClientTableProps> = ({
       {/* Edit Form */}
       {showEditForm && selectedClient && (
         <ClientForm
-          clientFields={clientFields}
+          clientFields={editClientFormFields}
           formTitle="Edit Client"
-          handleCancel={handleEditFormClose}
+          handleReturn={handleEditFormClose}
           handleFormSubmit={handleEditSubmit}
-          initialClientValue={selectedClient}
+          client={selectedClient}
+          setClient={setSelectedClient}
           sx={{
             position: "fixed",
             bottom: 100,

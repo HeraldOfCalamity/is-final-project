@@ -7,27 +7,34 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
-import { Client, ClientFormField } from "../../classes/Client";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Client, ClientFormField, NewClientDto } from "../../classes/Client";
+import ClickableMap from "../../components/ClickableMap";
 
 interface ClientFormProps {
   formTitle: string;
-  handleFormSubmit: (client: Client) => void;
-  handleCancel: () => void;
+  handleFormSubmit:
+    | Dispatch<SetStateAction<Client>>
+    | ((client: Client) => void);
+  handleReturn: () => void;
   clientFields: ClientFormField[];
   sx?: SxProps<Theme>;
-  initialClientValue: Client;
+  client: Client;
+  setClient:
+    | Dispatch<SetStateAction<Client>>
+    | Dispatch<SetStateAction<NewClientDto>>;
 }
 
 const ClientForm: React.FC<ClientFormProps> = ({
   formTitle,
   handleFormSubmit,
-  handleCancel,
+  handleReturn,
   sx,
-  initialClientValue,
+  client,
   clientFields,
+  setClient,
 }) => {
-  const [client, setClient] = useState<Client>(initialClientValue);
+  // const [client, setClient] = useState<Client>(client);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClient({
@@ -35,6 +42,11 @@ const ClientForm: React.FC<ClientFormProps> = ({
       [e.target.name]: e.target.value,
     });
     console.log(client);
+  };
+
+  const handleCoordChange = (coords: [number, number]) => {
+    setClient({ ...client, coordenates: coords });
+    // client.coordenates = coords;
   };
 
   const getClientValueFromField = (field: string) => {
@@ -67,7 +79,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
         {clientFields.map((field) => (
           <TextField
             key={"txt_" + field.fieldName}
-            required
+            required={true}
             variant="standard"
             disabled={field.disabled}
             label={field.fieldName[0].toUpperCase() + field.fieldName.slice(1)}
@@ -76,6 +88,12 @@ const ClientForm: React.FC<ClientFormProps> = ({
             onChange={handleChange}
           />
         ))}
+      </Box>
+      <Box>
+        <ClickableMap
+          coords={client.coordenates}
+          setCoords={handleCoordChange}
+        />
       </Box>
       <Box
         sx={{
@@ -88,11 +106,11 @@ const ClientForm: React.FC<ClientFormProps> = ({
           Save
         </Button>
         <Button
-          onClick={() => handleCancel()}
+          onClick={() => handleReturn()}
           variant="contained"
           color="error"
         >
-          Cancel
+          Return
         </Button>
       </Box>
     </Paper>

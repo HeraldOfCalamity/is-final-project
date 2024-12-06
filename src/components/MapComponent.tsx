@@ -2,8 +2,11 @@ import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIconRetina from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { Terrain } from "../classes/Terrain";
+import { MAP_CENTER } from "../config/map-metadata";
+// import { useState } from "react";
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: markerIcon,
@@ -15,14 +18,18 @@ L.Marker.prototype.options.icon = L.icon({
   shadowSize: [41, 41],
 });
 
-const MapComponent: React.FC = () => {
-  const position: [number, number] = [51.505, -0.09];
+interface MapComponentProps {
+  terrains: Terrain[];
+}
+
+const MapComponent: React.FC<MapComponentProps> = ({ terrains }) => {
+  // const [position, setPosition] = useState<[number, number]>(MAP_CENTER);
 
   return (
     <div style={{ height: "50vh", width: "100%" }}>
       <MapContainer
-        center={position}
-        zoom={13}
+        center={MAP_CENTER}
+        zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >
@@ -30,7 +37,23 @@ const MapComponent: React.FC = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={position}>
+
+        {/* Terrain Rendering */}
+        {terrains.map((terrain) => (
+          <Polygon
+            key={"sh_" + terrain.name}
+            positions={terrain.shape}
+            pathOptions={{
+              color: "blue",
+              fillColor: "cyan",
+              fillOpacity: 0.3,
+            }}
+          >
+            <Popup>{terrain.name}</Popup>
+          </Polygon>
+        ))}
+
+        <Marker position={MAP_CENTER}>
           <Popup>Map Center (popup message)</Popup>
         </Marker>
       </MapContainer>
