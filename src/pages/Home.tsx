@@ -1,22 +1,38 @@
-import { Button, Typography } from "@mui/material";
+import { Dashboard } from "@mui/icons-material";
+import MapView from "./dashboard/MapView";
+import { useEffect, useState } from "react";
+import { Client } from "../classes/Client";
+import { Terrain } from "../classes/Terrain";
+import { getClients } from "../services/client-service";
+import { getTerrains } from "../services/terrain-service";
+import StatisticsPanel from "./dashboard/StatisticsPanel";
+import { Typography } from "@mui/material";
 
 const Home: React.FC = () => {
+  const [clients, setClients] = useState<Client[]>([]);
+  const [terrains, setTerrains] = useState<Terrain[]>([]);
+
+  const fetchClients = async () => {
+    setClients(await getClients());
+  };
+
+  const fetchTerrains = async () => {
+    setTerrains(await getTerrains());
+  };
+
+  useEffect(() => {
+    fetchClients();
+    fetchTerrains();
+  }, []);
+
   return (
     <>
-      <h2>Home Page!</h2>
-      <Typography>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta nobis
-        fuga voluptates magnam saepe corrupti, fugit veritatis. Minus esse, sunt
-        cumque cupiditate, tempora et corporis exercitationem perferendis
-        quibusdam repellendus nostrum! Nesciunt repudiandae est dicta? Optio
-        quasi aliquam illum alias, error veniam dicta numquam doloremque
-        ratione, officia nostrum accusamus perferendis rem corporis enim
-        nesciunt illo. Exercitationem autem quisquam qui nemo neque? Hic
-        doloribus necessitatibus distinctio repudiandae tempora vel aliquam nam
-        quo sed soluta expedita consequuntur vero, est et qui aperiam aut maxime
-        officia, ad sunt sequi incidunt eaque molestiae. Porro, maiores.
+      <Typography variant="h2">
+        <Dashboard /> Dashboard
       </Typography>
-      <Button variant="contained">My mui button</Button>
+      <MapView clients={clients} terrains={terrains} />
+
+      <StatisticsPanel clients={clients} terrains={terrains} />
     </>
   );
 };

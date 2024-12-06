@@ -6,7 +6,7 @@ import { MapContainer, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Terrain } from "../classes/Terrain";
 import { MAP_CENTER } from "../config/map-metadata";
-import { useState } from "react";
+// import { useState } from "react";
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: markerIcon,
@@ -23,12 +23,12 @@ interface MapComponentProps {
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({ terrains }) => {
-  const [position, setPosition] = useState<[number, number]>(MAP_CENTER);
+  // const [position, setPosition] = useState<[number, number]>(MAP_CENTER);
 
   return (
     <div style={{ height: "50vh", width: "100%" }}>
       <MapContainer
-        center={position}
+        center={MAP_CENTER}
         zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
@@ -53,7 +53,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ terrains }) => {
           </Polygon>
         ))}
 
-        <Marker position={position}>
+        <Marker position={MAP_CENTER}>
           <Popup>Map Center (popup message)</Popup>
         </Marker>
       </MapContainer>
