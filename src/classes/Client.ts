@@ -3,6 +3,7 @@ export interface Client {
   username: string;
   name: string;
   lastname: string;
+  coordenates: [number, number];
 }
 
 export interface ClientFormField {

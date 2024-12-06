@@ -30,6 +30,7 @@ const App: React.FC = () => {
     name: "",
     lastname: "",
     username: "",
+    coordenates: [0, 0],
   };
 
   const newClientFormFields: ClientFormField[] = [
