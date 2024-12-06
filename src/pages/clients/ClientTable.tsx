@@ -25,14 +25,25 @@ import {
   updateClient,
 } from "../../services/client-service";
 
-interface ClientTableProps {
-  clientFields: ClientFormField[];
-}
+const editClientFormFields: ClientFormField[] = [
+  { fieldName: "id", disabled: true },
+  { fieldName: "username", disabled: false },
+  { fieldName: "name", disabled: false },
+  { fieldName: "lastname", disabled: false },
+  { fieldName: "lat", disabled: false },
+  { fieldName: "lng", disabled: false },
+];
 
-const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
+const ClientTable: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client>({
+    id: "",
+    coordenates: [0, 0],
+    lastname: "",
+    name: "",
+    username: "",
+  });
   const [showEditForm, setShowEditForm] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const maxClientsPerPage = 5;
@@ -112,7 +123,7 @@ const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
         <Table>
           <TableHead>
             <TableRow>
-              {clientFields.map((field) => (
+              {editClientFormFields.map((field) => (
                 <TableCell
                   key={"h_" + field.fieldName}
                   align="center"
@@ -131,6 +142,8 @@ const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
                 <TableCell align="center">{client.username}</TableCell>
                 <TableCell align="center">{client.name}</TableCell>
                 <TableCell align="center">{client.lastname}</TableCell>
+                <TableCell align="center">{client.coordenates[0]}</TableCell>
+                <TableCell align="center">{client.coordenates[1]}</TableCell>
                 <TableCell align="center">
                   <Box
                     sx={{
@@ -148,16 +161,20 @@ const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
                 </TableCell>
               </TableRow>
             ))}
-            <TableRow>
-              <TableCell colSpan={5}>
-                <Button variant="contained" href="/clients/new" fullWidth>
-                  New Client
-                </Button>
-              </TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Button
+        sx={{
+          mt: 2,
+        }}
+        variant="contained"
+        href="/clients/new"
+        fullWidth
+      >
+        New Client
+      </Button>
 
       <Pagination
         count={totalPages}
@@ -170,11 +187,11 @@ const ClientTable: React.FC<ClientTableProps> = ({ clientFields }) => {
       {/* Edit Form */}
       {showEditForm && selectedClient && (
         <ClientForm
-          clientFields={clientFields}
+          clientFields={editClientFormFields}
           formTitle="Edit Client"
-          handleCancel={handleEditFormClose}
+          handleReturn={handleEditFormClose}
           handleFormSubmit={handleEditSubmit}
-          initialClientValue={selectedClient}
+          client={selectedClient}
           setClient={setSelectedClient}
           sx={{
             position: "fixed",

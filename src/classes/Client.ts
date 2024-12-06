@@ -6,6 +6,13 @@ export interface Client {
   coordenates: [number, number];
 }
 
+export interface NewClientDto {
+  username: string;
+  name: string;
+  lastname: string;
+  coordenates: [number, number];
+}
+
 export interface ClientFormField {
   fieldName: string;
   disabled: boolean;

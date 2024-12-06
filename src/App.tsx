@@ -6,72 +6,24 @@ import { Container } from "@mui/material";
 import ClientTable from "./pages/clients/ClientTable";
 import NotFoundPage from "./pages/NotFoundPage";
 import ClientLayout from "./pages/clients/ClientLayout";
-import ClientForm from "./pages/clients/ClientForm";
-import { Client, ClientFormField } from "./classes/Client";
 import { useEffect, useState } from "react";
-import { createClient } from "./services/client-service";
 import TerrainLayout from "./pages/terrains/TerrainLayout";
 import TerrainDisplay from "./pages/terrains/TerrrainDisplay";
 import { createTerrain, getTerrains } from "./services/terrain-service";
 import { Terrain } from "./classes/Terrain";
 import TerrainCreator from "./pages/terrains/TerrainCreator";
+import NewClient from "./pages/clients/NewClient";
 
 const App: React.FC = () => {
   const [terrains, setTerrains] = useState<Terrain[]>([]);
 
-  const emptyClient: Client = {
-    id: "",
-    name: "",
-    lastname: "",
-    username: "",
-    coordenates: [0, 0],
-  };
-
-  const newClientFormFields: ClientFormField[] = [
-    { fieldName: "id", disabled: false },
-    { fieldName: "username", disabled: false },
-    { fieldName: "name", disabled: false },
-    { fieldName: "lastname", disabled: false },
-  ];
-
-  const editClientFormFields: ClientFormField[] = [
-    { fieldName: "id", disabled: true },
-    { fieldName: "username", disabled: false },
-    { fieldName: "name", disabled: false },
-    { fieldName: "lastname", disabled: false },
-  ];
-
   useEffect(() => {
-    // fetchClients();
     fetchTerrains();
   }, []);
-
-  // const fetchClients = async () => {
-  //   const fetchedClients = await getClients();
-  //   setClients(fetchedClients);
-  // };
 
   const fetchTerrains = async () => {
     const fetchedTerrains = await getTerrains();
     setTerrains(fetchedTerrains);
-  };
-
-  // const handleClientDeletion = async (clientId: string) => {
-  //   const confirmed = await deleteClient(clientId);
-  //   if (confirmed) {
-  //     fetchClients();
-  //   }
-  // };
-
-  // const handleClientEdition = async (updatedClient: Client) => {
-  //   const editedClient = await updateClient(updatedClient);
-  //   console.log("updatedClient:", editedClient);
-  //   fetchClients();
-  // };
-
-  const handleNewClient = (client: Client) => {
-    createClient(client);
-    redirectToClientTable();
   };
 
   const handleNewTerrain = (terrain: Terrain) => {
@@ -82,15 +34,6 @@ const App: React.FC = () => {
     window.location.pathname = "/terrains";
   };
 
-  const redirectToClientTable = (): void => {
-    window.location.pathname = "/clients";
-    // fetchClients();
-  };
-
-  const handleCloseNewClientForm = () => {
-    redirectToClientTable();
-  };
-
   return (
     <>
       <Navbar />
@@ -99,22 +42,8 @@ const App: React.FC = () => {
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="clients" element={<ClientLayout />}>
-            <Route
-              index
-              element={<ClientTable clientFields={editClientFormFields} />}
-            />
-            <Route
-              path="new"
-              element={
-                <ClientForm
-                  clientFields={newClientFormFields}
-                  handleCancel={handleCloseNewClientForm}
-                  formTitle="Client Registration"
-                  handleFormSubmit={handleNewClient}
-                  initialClientValue={emptyClient}
-                />
-              }
-            />
+            <Route index element={<ClientTable />} />
+            <Route path="new" element={<NewClient />} />
             {/* <Route path='edit' element={<EditClient />} /> */}
           </Route>
           <Route path="terrains" element={<TerrainLayout />}>

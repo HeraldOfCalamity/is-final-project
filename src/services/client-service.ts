@@ -79,5 +79,6 @@ export const createClient = async (newClient: Client): Promise<Client> => {
   // console.log(CLIENTS);
   // return Promise.resolve(newClient);
   const response = await axios.post(clientUrl, newClient);
+  alert("Successfully created client");
   return response.data;
 };
