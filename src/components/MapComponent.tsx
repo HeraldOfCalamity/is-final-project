@@ -29,7 +29,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ terrains }) => {
     <div style={{ height: "50vh", width: "100%" }}>
       <MapContainer
         center={position}
-        zoom={13}
+        zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >

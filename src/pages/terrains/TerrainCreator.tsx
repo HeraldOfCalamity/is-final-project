@@ -3,6 +3,7 @@ import { Terrain } from "../../classes/Terrain";
 import { MapContainer, Polygon, TileLayer, useMapEvents } from "react-leaflet";
 import { Box, Button, Paper, TextField } from "@mui/material";
 import { MAP_CENTER } from "../../config/map-metadata";
+import { AddLocationAlt } from "@mui/icons-material";
 
 interface TerrainCreatorProps {
   onSave: (terrain: Terrain) => void;
@@ -53,6 +54,9 @@ const TerrainCreator: React.FC<TerrainCreatorProps> = ({
     };
 
     onSave(newTerrain);
+    alert(
+      "Created terrain with " + newTerrain.shape.length.toString() + " points"
+    );
     cancelCreation(); //reset after saving;
   };
 
@@ -118,6 +122,7 @@ const TerrainCreator: React.FC<TerrainCreatorProps> = ({
               variant="contained"
               color="primary"
               onClick={() => setIsCreating(true)}
+              startIcon={<AddLocationAlt />}
               sx={{
                 mr: 1,
               }}
@@ -137,7 +142,7 @@ const TerrainCreator: React.FC<TerrainCreatorProps> = ({
 
       <MapContainer
         center={MAP_CENTER}
-        zoom={13}
+        zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >
