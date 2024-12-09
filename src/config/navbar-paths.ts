@@ -7,7 +7,7 @@ const navbarRoutes: Route[] = [
   { path: "/", text: "Home" },
   { path: "/clients", text: "Clients" },
   { path: "/terrains", text: "Terrains" },
-  { path: "/about", text: "About" },
+  // { path: "/about", text: "About" },
 ];
 
 export default navbarRoutes;

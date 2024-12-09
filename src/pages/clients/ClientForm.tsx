@@ -7,7 +7,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { Client, ClientFormField, NewClientDto } from "../../classes/Client";
 import ClickableMap from "../../components/ClickableMap";
 
@@ -35,6 +35,10 @@ const ClientForm: React.FC<ClientFormProps> = ({
   setClient,
 }) => {
   // const [client, setClient] = useState<Client>(client);
+
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setClient({
@@ -66,34 +70,81 @@ const ClientForm: React.FC<ClientFormProps> = ({
         ...sx,
       }}
     >
-      <Typography variant="h6">{formTitle}</Typography>
-      <Box
-        component={"form"}
-        noValidate
-        autoComplete="off"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {clientFields.map((field) => (
-          <TextField
-            key={"txt_" + field.fieldName}
-            required={true}
-            variant="standard"
-            disabled={field.disabled}
-            label={field.fieldName[0].toUpperCase() + field.fieldName.slice(1)}
-            name={field.fieldName}
-            value={getClientValueFromField(field.fieldName)}
-            onChange={handleChange}
-          />
-        ))}
-      </Box>
       <Box>
-        <ClickableMap
-          coords={client.coordenates}
-          setCoords={handleCoordChange}
-        />
+        <Box>
+          <Typography variant="h6">{formTitle}</Typography>
+          <Box
+            component={"form"}
+            noValidate
+            autoComplete="off"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {clientFields.map((field) =>
+              field.fieldName !== "coords" ? (
+                <TextField
+                  key={"txt_" + field.fieldName}
+                  required={true}
+                  variant="standard"
+                  disabled={field.disabled}
+                  label={
+                    field.fieldName[0].toUpperCase() + field.fieldName.slice(1)
+                  }
+                  name={field.fieldName}
+                  value={getClientValueFromField(field.fieldName)}
+                  onChange={handleChange}
+                />
+              ) : (
+                <>
+                  <TextField
+                    key={"txt_" + "lat"}
+                    required={true}
+                    variant="standard"
+                    disabled={false}
+                    label={"Lat"}
+                    name={"Lat"}
+                    value={client.coordenates[0]}
+                    onChange={(e) =>
+                      setClient({
+                        ...client,
+                        coordenates: [
+                          parseFloat(e.target.value),
+                          client.coordenates[1],
+                        ],
+                      })
+                    }
+                  />
+                  <TextField
+                    key={"txt_" + "lng"}
+                    required={true}
+                    variant="standard"
+                    disabled={false}
+                    label={"Lng"}
+                    name={"Lng"}
+                    value={client.coordenates[1]}
+                    onChange={(e) =>
+                      setClient({
+                        ...client,
+                        coordenates: [
+                          client.coordenates[0],
+                          parseFloat(e.target.value),
+                        ],
+                      })
+                    }
+                  />
+                </>
+              )
+            )}
+          </Box>
+        </Box>
+        <Box>
+          <ClickableMap
+            coords={client.coordenates}
+            setCoords={handleCoordChange}
+          />
+        </Box>
       </Box>
       <Box
         sx={{

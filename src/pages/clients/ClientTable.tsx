@@ -8,6 +8,7 @@ import {
   DialogTitle,
   IconButton,
   Pagination,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -30,8 +31,7 @@ const editClientFormFields: ClientFormField[] = [
   { fieldName: "username", disabled: false },
   { fieldName: "name", disabled: false },
   { fieldName: "lastname", disabled: false },
-  { fieldName: "lat", disabled: false },
-  { fieldName: "lng", disabled: false },
+  { fieldName: "coords", disabled: false },
 ];
 
 const ClientTable: React.FC = () => {
@@ -123,15 +123,35 @@ const ClientTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {editClientFormFields.map((field) => (
-                <TableCell
-                  key={"h_" + field.fieldName}
-                  align="center"
-                  // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  {field.fieldName[0].toUpperCase() + field.fieldName.slice(1)}
-                </TableCell>
-              ))}
+              {editClientFormFields.map((field) =>
+                field.fieldName !== "coords" ? (
+                  <TableCell
+                    key={"h_" + field.fieldName}
+                    align="center"
+                    // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    {field.fieldName[0].toUpperCase() +
+                      field.fieldName.slice(1)}
+                  </TableCell>
+                ) : (
+                  <>
+                    <TableCell
+                      key={"h_" + "lat"}
+                      align="center"
+                      // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      {"Lat"}
+                    </TableCell>
+                    <TableCell
+                      key={"h_" + "lng"}
+                      align="center"
+                      // sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      {"Lng"}
+                    </TableCell>
+                  </>
+                )
+              )}
               <TableCell align="center">Tools</TableCell>
             </TableRow>
           </TableHead>
@@ -186,21 +206,32 @@ const ClientTable: React.FC = () => {
 
       {/* Edit Form */}
       {showEditForm && selectedClient && (
-        <ClientForm
-          clientFields={editClientFormFields}
-          formTitle="Edit Client"
-          handleReturn={handleEditFormClose}
-          handleFormSubmit={handleEditSubmit}
-          client={selectedClient}
-          setClient={setSelectedClient}
+        <Paper
           sx={{
             position: "fixed",
             bottom: 100,
             right: 100,
             background: "white",
             padding: 2,
+            overflow: "auto",
+            height: "70vh",
+            width: "70vw",
           }}
-        />
+        >
+          <ClientForm
+            clientFields={editClientFormFields}
+            formTitle="Edit Client"
+            handleReturn={handleEditFormClose}
+            handleFormSubmit={handleEditSubmit}
+            client={selectedClient}
+            setClient={setSelectedClient}
+            sx={{
+              display: "flex",
+
+              flexDirection: "column",
+            }}
+          />
+        </Paper>
       )}
 
       <Dialog
